@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="color-scheme" content="light">
+<title>French Writing Memorization Test</title>
+<style>
+  :root{
+    --bg1:#eef6fd;
+    --bg2:#dcebfa;
+    --card:#ffffff;
+    --primary:#5b9bd5;
+    --primary-d:#3f7fb8;
+    --primary-l:#d9eafb;
+    --text:#22405e;
+    --muted:#6d8aa6;
+    --border:#cfe2f3;
+    --good:#2e9e6b;
+    --bad:#e05656;
+    --warn:#e39b2f;
+    --radius:16px;
+    --shadow:0 6px 24px rgba(70,120,170,.13);
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+
+  html,body{height:100%;}
+
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans","Noto Sans Vietnamese",sans-serif;
+    background:linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);
+    background-attachment:fixed;
+    color:var(--text);
+    line-height:1.55;
+    -webkit-text-size-adjust:100%;
+  }
+
+  .app{
+    max-width:960px;
+    margin:0 auto;
+    padding:22px 16px 64px;
+  }
+
+  .screen{display:none;animation:fade .22s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:linear-gradient(135deg,#ffffff 0%,#eaf4fd 100%);
+    border:1px solid var(--border);
+    border-radius:22px;
+    padding:28px 24px;
+    box-shadow:var(--shadow);
+    text-align:center;
+    margin-bottom:24px;
+  }
+  .hero h1{
+    margin:0 0 10px;
+    font-size:clamp(1.35rem,4.4vw,2.1rem);
+    letter-spacing:-.4px;
+    color:var(--primary-d);
+    font-weight:800;
+  }
+  .hero p{
+    margin:0 auto;
+    max-width:660px;
+    color:var(--muted);
+    font-size:clamp(.9rem,2.6vw,1rem);
+  }
+
+  .section-title{
+    font-size:.82rem;
+    text-transform:uppercase;
+    letter-spacing:1.4px;
+    color:var(--muted);
+    font-weight:700;
+    margin:0 0 12px 4px;
+  }
+
+  /* ---------- CARDS ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:18px;
+    box-shadow:var(--shadow);
+    margin-bottom:18px;
+  }
+
+  /* ---------- EXERCISE LIST ---------- */
+  .ex-list{display:grid;gap:12px;margin-bottom:22px;}
+
+  .ex-card{
+    text-align:left;
+    width:100%;
+    background:var(--card);
+    border:2px solid var(--border);
+    border-radius:var(--radius);
+    padding:16px 18px;
+    cursor:pointer;
+    font-family:inherit;
+    color:var(--text);
+    box-shadow:0 3px 12px rgba(70,120,170,.07);
+    transition:.18s ease;
+    display:block;
+  }
+  .ex-card:hover{border-color:#a9cdec;transform:translateY(-1px);}
+  .ex-card.selected{
+    border-color:var(--primary);
+    background:linear-gradient(135deg,#ffffff 0%,#eef7ff 100%);
+    box-shadow:0 6px 18px rgba(91,155,213,.25);
+  }
+  .ex-card .ex-name{
+    font-weight:800;
+    font-size:1.03rem;
+    color:var(--primary-d);
+    margin-bottom:6px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .ex-card .ex-name .dot{
+    width:12px;height:12px;border-radius:50%;
+    border:2px solid var(--primary);
+    flex:0 0 auto;
+    background:#fff;
+    transition:.18s;
+  }
+  .ex-card.selected .ex-name .dot{background:var(--primary);box-shadow:inset 0 0 0 2px #fff;}
+  .ex-card .ex-fr{font-style:italic;color:#4a7196;font-size:.9rem;margin-bottom:2px;}
+  .ex-card .ex-vi{color:var(--muted);font-size:.85rem;margin-bottom:8px;}
+  .ex-card .ex-stats{
+    font-size:.78rem;
+    color:var(--muted);
+    background:#f2f8fe;
+    border-radius:9px;
+    padding:6px 10px;
+    display:inline-block;
+  }
+  .ex-card .ex-stats b{color:var(--primary-d);}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{
+    font-family:inherit;
+    font-size:.95rem;
+    font-weight:700;
+    border-radius:12px;
+    padding:12px 20px;
+    border:1.5px solid transparent;
+    cursor:pointer;
+    transition:.16s ease;
+    line-height:1.2;
+  }
+  .btn.primary{background:var(--primary);color:#fff;box-shadow:0 4px 14px rgba(91,155,213,.35);}
+  .btn.primary:hover{background:var(--primary-d);}
+  .btn.ghost{background:#fff;color:var(--primary-d);border-color:var(--border);}
+  .btn.ghost:hover{background:var(--primary-l);border-color:#a9cdec;}
+  .btn.small{padding:8px 14px;font-size:.85rem;border-radius:10px;}
+  .btn.big{padding:15px 24px;font-size:1rem;width:100%;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none;}
+
+  .mode-row{display:grid;gap:12px;margin-bottom:24px;}
+  @media(min-width:620px){.mode-row{grid-template-columns:1fr 1fr;}}
+
+  .row-btns{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:14px;
+  }
+  .row-btns .btn{flex:1 1 auto;min-width:140px;}
+
+  /* ---------- TOPBAR ---------- */
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+    flex-wrap:wrap;
+  }
+  .badge{
+    background:#fff;
+    border:1px solid var(--border);
+    color:var(--primary-d);
+    font-weight:700;
+    font-size:.82rem;
+    padding:8px 14px;
+    border-radius:999px;
+    box-shadow:0 2px 8px rgba(70,120,170,.09);
+  }
+
+  /* ---------- TEST SCREEN ---------- */
+  .prompt-box{
+    background:linear-gradient(135deg,#f7fbff 0%,#eaf4fd 100%);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:14px 16px;
+  }
+  .prompt-box .label{
+    font-size:.72rem;text-transform:uppercase;letter-spacing:1.2px;
+    color:var(--muted);font-weight:700;margin-bottom:6px;
+  }
+  .prompt-box .fr{
+    font-size:1.05rem;font-weight:700;color:var(--primary-d);margin-bottom:6px;
+  }
+  .prompt-box .vi{font-size:.9rem;color:var(--muted);}
+
+  .editor-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;margin-bottom:10px;flex-wrap:wrap;
+  }
+  .editor-head .lbl{font-weight:800;color:var(--primary-d);}
+  .counter{
+    font-size:.8rem;font-weight:700;color:var(--primary-d);
+    background:var(--primary-l);border-radius:999px;padding:5px 12px;
+  }
+
+  textarea#answer-input{
+    width:100%;
+    min-height:270px;
+    resize:vertical;
+    padding:16px;
+    border-radius:14px;
+    border:1.5px solid var(--border);
+    background:#fbfdff;
+    font-family:inherit;
+    font-size:1.02rem;
+    line-height:1.85;
+    color:var(--text);
+    outline:none;
+    transition:.16s;
+    white-space:pre-wrap;
+    overflow-wrap:break-word;
+  }
+  textarea#answer-input:focus{
+    border-color:var(--primary);
+    background:#fff;
+    box-shadow:0 0 0 4px rgba(91,155,213,.14);
+  }
+  @media(max-width:520px){
+    textarea#answer-input{min-height:230px;font-size:1rem;padding:13px;}
+  }
+
+  .hint{
+    font-size:.78rem;color:var(--muted);margin-top:10px;
+    background:#f6fafe;border-left:3px solid var(--primary-l);
+    padding:8px 12px;border-radius:0 8px 8px 0;
+  }
+
+  /* ---------- ANSWER PANEL ---------- */
+  .answer-panel{
+    margin-top:16px;
+    border:1.5px dashed #a9cdec;
+    border-radius:14px;
+    background:#f8fcff;
+    padding:14px;
+  }
+  .answer-panel.hidden{display:none;}
+  .answer-head{
+    display:flex;justify-content:space-between;align-items:center;
+    gap:10px;margin-bottom:10px;flex-wrap:wrap;
+  }
+  .answer-head strong{color:var(--primary-d);font-size:.92rem;}
+  .answer-head .acts{display:flex;gap:8px;}
+  #answer-text{
+    margin:0;
+    white-space:pre-wrap;
+    word-break:break-word;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+    font-size:.92rem;
+    line-height:1.75;
+    color:var(--text);
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px;
+    max-height:420px;
+    overflow:auto;
+  }
+
+  /* ---------- RESULT ---------- */
+  .score-card{text-align:center;}
+  .score-big{
+    font-size:clamp(3rem,12vw,4.6rem);
+    font-weight:900;
+    color:var(--primary-d);
+    line-height:1;
+    letter-spacing:-2px;
+    margin-bottom:4px;
+  }
+  .score-big span{font-size:.36em;font-weight:800;color:var(--muted);letter-spacing:0;}
+  .score-big.perfect{color:var(--good);}
+
+  .score-meta{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:18px 0 12px;
+  }
+  .score-meta > div{
+    background:#f4f9fe;
+    border:1px solid var(--border);
+    border-radius:13px;
+    padding:12px 6px;
+  }
+  .score-meta .v{font-size:1.15rem;font-weight:800;color:var(--primary-d);display:block;}
+  .score-meta .k{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;font-weight:700;}
+
+  .verdict{
+    font-size:.92rem;font-weight:700;border-radius:12px;padding:11px 16px;display:inline-block;
+  }
+  .verdict.ok{background:#e8f8f0;color:var(--good);}
+  .verdict.no{background:#fdeeee;color:var(--bad);}
+  .verdict.practice{background:#fff5e6;color:var(--warn);}
+
+  .diff{
+    margin:0;
+    white-space:pre-wrap;
+    word-break:break-word;
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Courier New",monospace;
+    font-size:.92rem;
+    line-height:1.85;
+    background:#fbfdff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px;
+    max-height:420px;
+    overflow:auto;
+    color:var(--text);
+  }
+
+  .ch{border-radius:3px;padding:0 1px;}
+  .ch.missing{background:#ffd9d9;color:#a51f1f;font-weight:700;text-decoration:underline wavy #e05656;}
+  .ch.extra{background:#ffeccb;color:#8a5a00;font-weight:700;text-decoration:underline wavy #e39b2f;}
+  .nl{display:inline;}
+
+  .legend{
+    display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;color:var(--muted);margin-top:10px;
+  }
+  .legend span{display:flex;align-items:center;gap:6px;}
+  .legend i{width:14px;height:14px;border-radius:4px;display:inline-block;}
+  .legend i.missing{background:#ffd9d9;border:1px solid #e05656;}
+  .legend i.extra{background:#ffeccb;border:1px solid #e39b2f;}
+
+  h3.card-title{
+    margin:0 0 12px;
+    font-size:.95rem;
+    color:var(--primary-d);
+    font-weight:800;
+  }
+
+  ul#error-list{
+    list-style:none;
+    margin:0;padding:0;
+    max-height:420px;
+    overflow:auto;
+  }
+  ul#error-list li{
+    padding:10px 12px;
+    border-radius:10px;
+    background:#f8fbfe;
+    border:1px solid var(--border);
+    margin-bottom:8px;
+    font-size:.86rem;
+    line-height:1.6;
+  }
+  ul#error-list li .pos{
+    display:inline-block;
+    background:var(--primary-l);
+    color:var(--primary-d);
+    font-weight:800;
+    border-radius:7px;
+    padding:1px 8px;
+    margin-right:8px;
+    font-size:.78rem;
+  }
+  ul#error-list li b.exp{color:#a51f1f;}
+  ul#error-list li b.got{color:#8a5a00;}
+  ul#error-list li code{
+    font-family:ui-monospace,Menlo,Consolas,monospace;
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:1px 6px;
+  }
+  ul#error-list li.empty{
+    background:#eefaf3;border-color:#c8ebd9;color:var(--good);font-weight:700;
+  }
+
+  .progress-box h3{margin:0 0 10px;font-size:.95rem;color:var(--primary-d);}
+  .prog-grid{display:grid;gap:12px;}
+  @media(min-width:620px){.prog-grid{grid-template-columns:1fr 1fr;}}
+  .prog-item{
+    background:#f6fafe;border:1px solid var(--border);border-radius:12px;padding:12px 14px;
+  }
+  .prog-item .t{font-weight:800;font-size:.86rem;color:var(--primary-d);margin-bottom:6px;}
+  .prog-item .r{font-size:.8rem;color:var(--muted);}
+  .prog-item .r b{color:var(--text);}
+
+  footer.note{
+    text-align:center;color:var(--muted);font-size:.76rem;margin-top:26px;line-height:1.7;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ HOME ============ -->
+  <section id="screen-home" class="screen active">
+    <div class="hero">
+      <h1>French Writing Memorization Test</h1>
+      <p>
+        Luyện ghi nhớ và viết lại <b>chính xác từng câu, từng chữ, từng dấu câu</b> hai đoạn văn tiếng Pháp.
+        Bài làm được chấm bằng so sánh chuỗi tuyệt đối: phân biệt chữ hoa / chữ thường, dấu câu,
+        dấu cách và dấu tiếng Pháp (é, è, ê, à, ù, ç…). Chỉ đạt <b>10/10</b> khi khớp 100%.
+      </p>
+    </div>
+
+    <h2 class="section-title">Chọn đề bài</h2>
+    <div class="ex-list">
+      <button class="ex-card selected" data-ex="1" type="button">
+        <div class="ex-name"><span class="dot"></span>Bài 1: Description de mon meilleur ami</div>
+        <div class="ex-fr">Décris ton meilleur ami.</div>
+        <div class="ex-vi">Hãy miêu tả người bạn thân nhất của em.</div>
+        <div class="ex-stats" data-stats="1">Chưa làm lần nào.</div>
+      </button>
+
+      <button class="ex-card" data-ex="2" type="button">
+        <div class="ex-name"><span class="dot"></span>Bài 2: Carte postale de Vũng Tàu</div>
+        <div class="ex-fr">Écris une carte postale à ton ami Minh pour parler de tes vacances à Vũng Tàu.</div>
+        <div class="ex-vi">Viết một tấm bưu thiếp gửi cho bạn Minh để kể về kỳ nghỉ của em ở Vũng Tàu.</div>
+        <div class="ex-stats" data-stats="2">Chưa làm lần nào.</div>
+      </button>
+    </div>
+
+    <div class="mode-row">
+      <button id="btn-start" class="btn primary big" type="button">Bắt đầu kiểm tra</button>
+      <button id="btn-practice" class="btn ghost big" type="button">Chế độ xem đáp án &amp; luyện tập</button>
+    </div>
+
+    <div class="card progress-box">
+      <h3>Tiến độ học tập (lưu trên thiết bị này)</h3>
+      <div class="prog-grid">
+        <div class="prog-item" id="prog-1"></div>
+        <div class="prog-item" id="prog-2"></div>
+      </div>
+    </div>
+
+    <footer class="note">
+      Ứng dụng chạy hoàn toàn offline, không dùng backend và không dùng AI để chấm điểm.<br>
+      Mẹo: trên iPad/iPhone hãy tắt “Tự động sửa” và “Dấu câu thông minh” để không bị đổi dấu câu khi nhập.
+    </footer>
+  </section>
+
+  <!-- ============ TEST ============ -->
+  <section id="screen-test" class="screen">
+    <div class="topbar">
+      <button id="btn-back-home" class="btn ghost small" type="button">← Trang chủ</button>
+      <span class="badge" id="test-badge">Bài 1 · Chế độ kiểm tra</span>
+    </div>
+
+    <div class="card">
+      <div class="prompt-box">
+        <div class="label">Đề bài</div>
+        <div class="fr" id="test-prompt-fr"></div>
+        <div class="vi" id="test-prompt-vi"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="editor-head">
+        <span class="lbl">Bài làm của bạn</span>
+        <span class="counter" id="char-counter">0 ký tự</span>
+      </div>
+
+      <textarea id="answer-input"
+        spellcheck="false"
+        autocorrect="off"
+        autocapitalize="off"
+        autocomplete="off"
+        wrap="soft"
+        dir="ltr"
+        inputmode="text"
+        placeholder="Viết lại toàn bộ đoạn văn bằng tiếng Pháp tại đây…"></textarea>
+
+      <div class="hint">
+        Chấm điểm tuyệt đối: không tự sửa lỗi chính tả, không bỏ qua khoảng trắng, không bỏ qua xuống dòng,
+        không bỏ qua dấu câu, phân biệt chữ hoa / chữ thường.
+      </div>
+
+      <div class="row-btns">
+        <button id="btn-grade" class="btn primary" type="button">Chấm điểm</button>
+        <button id="btn-clear" class="btn ghost" type="button">Xóa bài</button>
+        <button id="btn-toggle-answer" class="btn ghost" type="button">Hiện đáp án</button>
+      </div>
+
+      <div id="answer-panel" class="answer-panel hidden">
+        <div class="answer-head">
+          <strong>Đáp án chuẩn</strong>
+          <div class="acts">
+            <button id="btn-copy-answer" class="btn ghost small" type="button">Sao chép</button>
+            <button id="btn-hide-answer" class="btn ghost small" type="button">Ẩn đáp án</button>
+          </div>
+        </div>
+        <pre id="answer-text"></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESULT ============ -->
+  <section id="screen-result" class="screen">
+    <div class="topbar">
+      <button id="btn-result-home" class="btn ghost small" type="button">← Trang chủ</button>
+      <span class="badge" id="result-badge">Bài 1</span>
+    </div>
+
+    <div class="card score-card">
+      <div class="score-big" id="score-big">0<span>/10</span></div>
+      <div id="verdict" class="verdict no">—</div>
+      <div class="score-meta">
+        <div><span class="v" id="meta-acc">0%</span><span class="k">Độ chính xác</span></div>
+        <div><span class="v" id="meta-ok">0</span><span class="k">Ký tự đúng</span></div>
+        <div><span class="v" id="meta-bad">0</span><span class="k">Ký tự sai</span></div>
+      </div>
+      <div class="legend" style="justify-content:center;">
+        <span><i class="missing"></i>Thiếu / sai (theo đáp án)</span>
+        <span><i class="extra"></i>Thừa / khác (trong bài làm)</span>
+        <span><code>␣</code> = dấu cách &nbsp;·&nbsp; <code>↵</code> = xuống dòng</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Đáp án chuẩn (ký tự bị thiếu / sai được tô đỏ)</h3>
+      <pre class="diff" id="diff-answer"></pre>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Bài làm của bạn (ký tự thừa / khác được tô vàng)</h3>
+      <pre class="diff" id="diff-user"></pre>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">Chi tiết lỗi theo vị trí</h3>
+      <ul id="error-list"></ul>
+    </div>
+
+    <div class="row-btns">
+      <button id="btn-retry" class="btn primary" type="button">Làm lại</button>
+      <button id="btn-home-final" class="btn ghost" type="button">Về trang chủ</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+"use strict";
+
+/* =====================================================================
+   1. ĐÁP ÁN CỐ ĐỊNH — KHÔNG ĐƯỢC SỬA ĐỔI
+   ===================================================================== */
+
+const ANSWER_1 =
+"Mon meilleur ami s’appelle Minh. Il a 18 ans. Il vient du Vietnam. Il parle vietnamien et anglais. Il est grand et mince. Il a les cheveux noirs et les yeux bruns. Il est gentil, drôle et sympathique. Il est aussi intelligent et serviable. J’aime passer du temps avec lui. Je suis heureux d’avoir un ami comme lui.";
+
+const ANSWER_2 =
+"Cher Minh,\n\nJe suis à Vũng Tàu pour les vacances avec ma famille. Il fait beau et chaud aujourd’hui. Je visite la plage, la Maison Blanche et la statue du Christ-Roi. Les endroits sont très beaux. Je nage dans la mer et je prends beaucoup de photos. L’après-midi, je mange des plats vietnamiens délicieux. Le soir, je regarde le coucher du soleil. Je suis très heureux et j’aime beaucoup Vũng Tàu. J’espère que tu vas bien.\n\nÀ bientôt !\n\nAmitiés,\n\nWill";
+
+const EXERCISES = {
+  "1": {
+    id: "1",
+    name: "Bài 1: Description de mon meilleur ami",
+    shortName: "Bài 1",
+    promptFr: "Décris ton meilleur ami.",
+    promptVi: "Hãy miêu tả người bạn thân nhất của em.",
+    answer: ANSWER_1
+  },
+  "2": {
+    id: "2",
+    name: "Bài 2: Carte postale de Vũng Tàu",
+    shortName: "Bài 2",
+    promptFr: "Écris une carte postale à ton ami Minh pour parler de tes vacances à Vũng Tàu.",
+    promptVi: "Viết một tấm bưu thiếp gửi cho bạn Minh để kể về kỳ nghỉ của em ở Vũng Tàu.",
+    answer: ANSWER_2
+  }
+};
+
+/* =====================================================================
+   2. TRẠNG THÁI
+   ===================================================================== */
+
+const state = {
+  exId: "1",
+  mode: "test"   // "test" | "practice"
+};
+
+const LS_KEY = "fr_writing_progress_v1";
+
+/* =====================================================================
+   3. TIỆN ÍCH
+   ===================================================================== */
+
+const $$ = (sel) => Array.prototype.slice.call(document.querySelectorAll(sel));
+
+function escapeHtml(s){
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function fmtScore(n){
+  const r = Math.round(n * 10) / 10;
+  return (Math.abs(r - Math.round(r)) < 0.001) ? String(Math.round(r)) : r.toFixed(1);
+}
+
+function showScreen(id){
+  $$(".screen").forEach(function(s){ s.classList.remove("active"); });
+  const el = document.getElementById(id);
+  if (el) el.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* =====================================================================
+   4. LOCALSTORAGE — LƯU TIẾN ĐỘ (an toàn với chế độ riêng tư)
+   ===================================================================== */
+
+function loadProgress(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return {};
+    const obj = JSON.parse(raw);
+    return (obj && typeof obj === "object") ? obj : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveProgress(p){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(p)); } catch (e) { /* bỏ qua */ }
+}
+
+function recordAttempt(exId, score, accuracy){
+  const p = loadProgress();
+  const prev = p[exId] || { attempts: 0, best: 0, last: 0, lastAcc: 0, lastDate: null };
+  const entry = {
+    attempts: (prev.attempts || 0) + 1,
+    best: Math.max(prev.best || 0, score),
+    last: score,
+    lastAcc: accuracy,
+    lastDate: new Date().toISOString()
+  };
+  p[exId] = entry;
+  saveProgress(p);
+  return entry;
+}
+
+function renderHomeProgress(){
+  let p = {};
+  try { p = loadProgress(); } catch (e) { p = {}; }
+
+  ["1", "2"].forEach(function(id){
+    const box = document.getElementById("prog-" + id);
+    const st  = document.querySelector('[data-stats="' + id + '"]');
+    if (!box) return;
+
+    const e = p[id];
+
+    if (!e || !e.attempts) {
+      box.innerHTML = '<div class="t">' + escapeHtml(EXERCISES[id].shortName) + '</div>' +
+                      '<div class="r">Chưa có dữ liệu. Hãy làm bài đầu tiên!</div>';
+      if (st) st.textContent = "Chưa làm lần nào.";
+      return;
+    }
+
+    const d = e.lastDate ? new Date(e.lastDate) : null;
+    const dateStr = (d && !isNaN(d.getTime()))
+      ? d.toLocaleDateString("vi-VN") + " " +
+        d.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })
+      : "—";
+
+    box.innerHTML =
+      '<div class="t">' + escapeHtml(EXERCISES[id].shortName) + '</div>' +
+      '<div class="r">Số lần làm: <b>' + e.attempts + '</b><br>' +
+      'Điểm cao nhất: <b>' + fmtScore(e.best || 0) + '/10</b><br>' +
+      'Lần gần nhất: <b>' + fmtScore(e.last || 0) + '/10</b> · ' +
+      Number(e.lastAcc || 0).toFixed(1) + '%<br>' +
+      'Thời gian: <b>' + dateStr + '</b></div>';
+
+    if (st) {
+      st.innerHTML = 'Số lần: <b>' + e.attempts + '</b> · Cao nhất: <b>' +
+                     fmtScore(e.best || 0) + '/10</b> · Gần nhất: <b>' +
+                     fmtScore(e.last || 0) + '/10</b>';
+    }
+  });
+}
+
+/* =====================================================================
+   5. SO SÁNH CHÍNH XÁC + DIFF TỪNG KÝ TỰ
+   ===================================================================== */
+
+/** So sánh tuyệt đối: KHÔNG trim, KHÔNG chuẩn hóa, KHÔNG đổi chữ hoa/thường */
+function exactCompare(userAnswer, correctAnswer){
+  return userAnswer === correctAnswer;
+}
+
+/**
+ * Diff cấp ký tự dựa trên LCS.
+ * Trả về mảng các op: { t:'eq'|'del'|'ins', a, b, ai, bi }
+ *   eq  = ký tự khớp
+ *   del = ký tự có trong đáp án nhưng thiếu trong bài làm
+ *   ins = ký tự có trong bài làm nhưng không có trong đáp án
+ */
+function diffChars(a, b){
+  const n = a.length, m = b.length;
+  const dp = new Array(n + 1);
+  for (let i = 0; i <= n; i++) dp[i] = new Int32Array(m + 1);
+
+  for (let i = n - 1; i >= 0; i--) {
+    const ai = a.charCodeAt(i);
+    const rowCur = dp[i];
+    const rowNext = dp[i + 1];
+    for (let j = m - 1; j >= 0; j--) {
+      if (ai === b.charCodeAt(j)) {
+        rowCur[j] = rowNext[j + 1] + 1;
+      } else {
+        rowCur[j] = rowNext[j] >= rowCur[j + 1] ? rowNext[j] : rowCur[j + 1];
+      }
+    }
+  }
+
+  const ops = [];
+  let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (a[i] === b[j]) {
+      ops.push({ t: "eq", a: a[i], b: b[j], ai: i, bi: j });
+      i++; j++;
+    } else if (dp[i + 1][j] >= dp[i][j + 1]) {
+      ops.push({ t: "del", a: a[i], ai: i, bi: j });
+      i++;
+    } else {
+      ops.push({ t: "ins", b: b[j], ai: i, bi: j });
+      j++;
+    }
+  }
+  while (i < n) { ops.push({ t: "del", a: a[i], ai: i, bi: j }); i++; }
+  while (j < m) { ops.push({ t: "ins", b: b[j], ai: i, bi: j }); j++; }
+
+  return ops;
+}
+
+/* =====================================================================
+   6. HIỂN THỊ DIFF
+   ===================================================================== */
+
+function plainChar(ch){
+  if (ch === "\n") return "\n";
+  return escapeHtml(ch);
+}
+
+function markedChar(ch, cls){
+  if (ch === "\n") return '<span class="ch ' + cls + ' nl">↵\n</span>';
+  if (ch === " ")  return '<span class="ch ' + cls + '">␣</span>';
+  return '<span class="ch ' + cls + '">' + escapeHtml(ch) + '</span>';
+}
+
+function renderAnswerSide(ops){
+  let html = "";
+  for (let k = 0; k < ops.length; k++) {
+    const op = ops[k];
+    if (op.t === "eq")       html += plainChar(op.a);
+    else if (op.t === "del") html += markedChar(op.a, "missing");
+    /* 'ins' → ký tự thừa, không thuộc đáp án nên không hiển thị ở đây */
+  }
+  return html;
+}
+
+function renderUserSide(ops){
+  let html = "";
+  for (let k = 0; k < ops.length; k++) {
+    const op = ops[k];
+    if (op.t === "eq")       html += plainChar(op.b);
+    else if (op.t === "ins") html += markedChar(op.b, "extra");
+    /* 'del' → ký tự bị thiếu, không có trong bài làm nên không hiển thị ở đây */
+  }
+  return html;
+}
+
+/* =====================================================================
+   7. LIỆT KÊ LỖI THEO VỊ TRÍ
+   ===================================================================== */
+
+function visChar(s){
+  return String(s).replace(/ /g, "␣").replace(/\n/g, "⏎");
+}
+
+function buildErrorGroups(ops){
+  const groups = [];
+  let cur = null;
+
+  for (let k = 0; k < ops.length; k++) {
+    const op = ops[k];
+    if (op.t === "eq") { cur = null; continue; }
+    if (!cur) {
+      cur = { pos: op.ai, dels: [], inss: [] };
+      groups.push(cur);
+    }
+    if (op.t === "del") cur.dels.push(op.a);
+    else                cur.inss.push(op.b);
+  }
+  return groups;
+}
+
+function renderErrorList(ops){
+  const list = document.getElementById("error-list");
+  const groups = buildErrorGroups(ops);
+
+  if (groups.length === 0) {
+    list.innerHTML = '<li class="empty">✓ Không có lỗi nào. Bài làm khớp chính xác 100% với đáp án.</li>';
+    return;
+  }
+
+  const MAX = 60;
+  const frag = document.createDocumentFragment();
+
+  groups.slice(0, MAX).forEach(function(g){
+    const exp = g.dels.join("");
+    const got = g.inss.join("");
+    const pos = g.pos + 1;
+
+    const li = document.createElement("li");
+    let body = "";
+
+    if (!got) {
+      body = 'Thiếu <b>' + exp.length + '</b> ký tự. Đáp án có: <code>' +
+             escapeHtml(visChar(exp)) + '</code>';
+    } else if (!exp) {
+      body = 'Thừa <b>' + got.length + '</b> ký tự không có trong đáp án: <code>' +
+             escapeHtml(visChar(got)) + '</code>';
+    } else {
+      body = 'Sai ký tự. Đáp án: <b class="exp"><code>' +
+             escapeHtml(visChar(exp)) + '</code></b> → Bài làm: <b class="got"><code>' +
+             escapeHtml(visChar(got)) + '</code></b>';
+    }
+
+    li.innerHTML = '<span class="pos">Vị trí ' + pos + '</span>' + body;
+    frag.appendChild(li);
+  });
+
+  if (groups.length > MAX) {
+    const li = document.createElement("li");
+    li.innerHTML = '… và còn <b>' + (groups.length - MAX) + '</b> nhóm lỗi khác.';
+    frag.appendChild(li);
+  }
+
+  list.innerHTML = "";
+  list.appendChild(frag);
+}
+
+/* =====================================================================
+   8. CHẤM ĐIỂM
+   ===================================================================== */
+
+function grade(exId, userAnswer, recordProgress){
+  const ex = EXERCISES[exId];
+  if (!ex) return;
+  const correct = ex.answer;
+
+  const isExact = exactCompare(userAnswer, correct);
+  const ops = diffChars(correct, userAnswer);
+
+  let equalCount = 0, delCount = 0, insCount = 0;
+  for (let k = 0; k < ops.length; k++) {
+    if (ops[k].t === "eq") equalCount++;
+    else if (ops[k].t === "del") delCount++;
+    else insCount++;
+  }
+
+  const totalCorrectChars = correct.length;
+  const accuracy = totalCorrectChars === 0 ? 0 : (equalCount / totalCorrectChars) * 100;
+
+  let score;
+  if (isExact) {
+    score = 10;
+  } else {
+    // Điểm theo tỷ lệ ký tự đúng, KHÔNG bao giờ chạm 10 nếu chưa khớp tuyệt đối
+    score = Math.min(9.9, Math.round(accuracy) / 10);
+  }
+
+  /* ---- Hiển thị ---- */
+  const scoreEl = document.getElementById("score-big");
+  scoreEl.innerHTML = fmtScore(score) + '<span>/10</span>';
+  scoreEl.classList.toggle("perfect", isExact);
+
+  document.getElementById("meta-acc").textContent = accuracy.toFixed(1) + "%";
+  document.getElementById("meta-ok").textContent  = equalCount + " / " + totalCorrectChars;
+  document.getElementById("meta-bad").textContent = (delCount + insCount) +
+      " (thiếu " + delCount + " · thừa " + insCount + ")";
+
+  const verdict = document.getElementById("verdict");
+  if (recordProgress === false) {
+    verdict.className = "verdict practice";
+    verdict.textContent = "Chế độ luyện tập — kết quả không được lưu vào tiến độ. " +
+      (isExact ? "Bài làm khớp 100% đáp án." : "Hãy xem chi tiết lỗi bên dưới.");
+  } else if (isExact) {
+    verdict.className = "verdict ok";
+    verdict.textContent = "🎉 Hoàn hảo! Bài làm khớp chính xác 100% đáp án — 10/10.";
+  } else {
+    verdict.className = "verdict no";
+    verdict.textContent = "Chưa khớp tuyệt đối. Hãy xem chi tiết lỗi bên dưới và sửa lại từng ký tự.";
+  }
+
+  document.getElementById("diff-answer").innerHTML = renderAnswerSide(ops);
+  document.getElementById("diff-user").innerHTML   = renderUserSide(ops);
+  renderErrorList(ops);
+
+  const badge = document.getElementById("result-badge");
+  badge.textContent = ex.shortName + (recordProgress === false ? " · Luyện tập" : " · Kết quả");
+
+  /* ---- Lưu tiến độ ---- */
+  if (recordProgress !== false) {
+    recordAttempt(exId, score, accuracy);
+    renderHomeProgress();
+  }
+
+  showScreen("screen-result");
+}
+
+/* =====================================================================
+   9. ĐIỀU KHIỂN MÀN HÌNH KIỂM TRA
+   ===================================================================== */
+
+function updateCounter(){
+  const v = document.getElementById("answer-input").value;
+  document.getElementById("char-counter").textContent =
+      v.length.toLocaleString("vi-VN") + " ký tự";
+}
+
+function startExercise(exId, mode){
+  const ex = EXERCISES[String(exId)];
+  if (!ex) return;
+
+  state.exId = String(exId);
+  state.mode = (mode === "practice") ? "practice" : "test";
+
+  document.getElementById("test-prompt-fr").textContent = ex.promptFr;
+  document.getElementById("test-prompt-vi").textContent = ex.promptVi;
+  document.getElementById("test-badge").textContent =
+      ex.shortName + (state.mode === "practice" ? " · Chế độ luyện tập" : " · Chế độ kiểm tra");
+
+  const input = document.getElementById("answer-input");
+  input.value = "";
+  updateCounter();
+
+  const panel = document.getElementById("answer-panel");
+  const toggleBtn = document.getElementById("btn-toggle-answer");
+  const gradeBtn = document.getElementById("btn-grade");
+
+  if (state.mode === "practice") {
+    panel.classList.remove("hidden");
+    toggleBtn.textContent = "Ẩn đáp án";
+    gradeBtn.textContent = "So sánh bài làm (không lưu điểm)";
+  } else {
+    panel.classList.add("hidden");
+    toggleBtn.textContent = "Hiện đáp án";
+    gradeBtn.textContent = "Chấm điểm";
+  }
+
+  document.getElementById("answer-text").textContent = ex.answer;
+
+  showScreen("screen-test");
+  if (state.mode === "test") {
+    setTimeout(function(){ try { input.focus(); } catch(e){} }, 120);
+  }
+}
+
+/* =====================================================================
+   10. SAO CHÉP ĐÁP ÁN (có fallback)
+   ===================================================================== */
+
+function fallbackCopy(text, cb){
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.top = "-1000px";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); if (cb) cb(); } catch (e) { /* bỏ qua */ }
+  document.body.removeChild(ta);
+}
+
+/* =====================================================================
+   11. KHỞI TẠO ỨNG DỤNG
+   ===================================================================== */
+
+function initApp(){
+
+  /* ---------- Trang chủ ---------- */
+  $$(".ex-card").forEach(function(card){
+    card.addEventListener("click", function(){
+      $$(".ex-card").forEach(function(c){ c.classList.remove("selected"); });
+      card.classList.add("selected");
+      state.exId = card.dataset.ex;
+    });
+  });
+
+  document.getElementById("btn-start").addEventListener("click", function(){
+    startExercise(state.exId, "test");
+  });
+
+  document.getElementById("btn-practice").addEventListener("click", function(){
+    startExercise(state.exId, "practice");
+  });
+
+  /* ---------- Màn hình kiểm tra ---------- */
+  const input = document.getElementById("answer-input");
+  input.addEventListener("input", updateCounter);
+
+  document.getElementById("btn-back-home").addEventListener("click", function(){
+    renderHomeProgress();
+    showScreen("screen-home");
+  });
+
+  document.getElementById("btn-clear").addEventListener("click", function(){
+    input.value = "";
+    updateCounter();
+    try { input.focus(); } catch (e) {}
+  });
+
+  document.getElementById("btn-toggle-answer").addEventListener("click", function(){
+    const panel = document.getElementById("answer-panel");
+    const btn = document.getElementById("btn-toggle-answer");
+    const hidden = panel.classList.toggle("hidden");
+    btn.textContent = hidden ? "Hiện đáp án" : "Ẩn đáp án";
+  });
+
+  document.getElementById("btn-hide-answer").addEventListener("click", function(){
+    document.getElementById("answer-panel").classList.add("hidden");
+    document.getElementById("btn-toggle-answer").textContent = "Hiện đáp án";
+  });
+
+  document.getElementById("btn-copy-answer").addEventListener("click", function(){
+    const ex = EXERCISES[state.exId];
+    if (!ex) return;
+    const text = ex.answer;
+    const btn = document.getElementById("btn-copy-answer");
+    const done = function(){
+      const old = btn.textContent;
+      btn.textContent = "Đã sao chép ✓";
+      setTimeout(function(){ btn.textContent = old; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(function(){ fallbackCopy(text, done); });
+    } else {
+      fallbackCopy(text, done);
+    }
+  });
+
+  document.getElementById("btn-grade").addEventListener("click", function(){
+    const userAnswer = document.getElementById("answer-input").value;
+    const record = (state.mode === "test");
+    grade(state.exId, userAnswer, record);
+  });
+
+  input.addEventListener("keydown", function(e){
+    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+      e.preventDefault();
+      document.getElementById("btn-grade").click();
+    }
+  });
+
+  /* ---------- Màn hình kết quả ---------- */
+  document.getElementById("btn-retry").addEventListener("click", function(){
+    startExercise(state.exId, state.mode);
+  });
+
+  document.getElementById("btn-result-home").addEventListener("click", function(){
+    renderHomeProgress();
+    showScreen("screen-home");
+  });
+
+  document.getElementById("btn-home-final").addEventListener("click", function(){
+    renderHomeProgress();
+    showScreen("screen-home");
+  });
+
+  /* ---------- Hiển thị tiến độ lần đầu ---------- */
+  renderHomeProgress();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}
+</script>
+</body>
+</html>
